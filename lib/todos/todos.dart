@@ -92,14 +92,19 @@ class _CreteTaskState extends State<CreteTask> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Crete new task\n', style: TextStyle(fontSize: 22),),
+          Text(
+            'Crete new task\n',
+            style: TextStyle(fontSize: 22),
+          ),
           TextFormField(
             controller: _cretetaskController,
             decoration: InputDecoration(
                 border: OutlineInputBorder(
                     borderSide: BorderSide(width: 1, color: Colors.cyan))),
           ),
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           ElevatedButton(
               style: ButtonStyle(
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -108,7 +113,10 @@ class _CreteTaskState extends State<CreteTask> {
               onPressed: () {
                 Navigator.of(context).pop(_cretetaskController.text);
               },
-              child: Text('Save todo', style: TextStyle(height: 3),))
+              child: Text(
+                'Save todo',
+                style: TextStyle(height: 3),
+              ))
         ],
       ),
     );
