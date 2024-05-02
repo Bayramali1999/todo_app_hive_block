@@ -25,6 +25,7 @@ class TodosPage extends StatelessWidget {
                 children: [
                   ...state.task.map(
                     (e) => ListTile(
+                      style: ListTileStyle.list,
                       title: Text(e.task),
                       trailing: Checkbox(
                         value: e.completed,
@@ -35,27 +36,40 @@ class TodosPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  ListTile(
-                    title: Text('crete new tasl'),
-                    trailing: Icon(Icons.edit),
-                    onTap: () async {
-                      final reslt = await showDialog(
-                          context: context,
-                          builder: (context) => Dialog(
-                                child: CreteTask(),
-                              ));
-                      if (reslt != null) {
-                        BlocProvider.of<TodoBloc>(context)
-                            .add(AddTodoEvent(reslt));
-                      }
-                    },
-                  )
+                  // ListTile(
+                  //   title: Text('crete new tasl'),
+                  //   trailing: Icon(Icons.edit),
+                  //   onTap: () async {
+                  //     final reslt = await showDialog(
+                  //         context: context,
+                  //         builder: (context) => Dialog(
+                  //               child: CreteTask(),
+                  //             ));
+                  //     if (reslt != null) {
+                  //       BlocProvider.of<TodoBloc>(context)
+                  //           .add(AddTodoEvent(reslt));
+                  //     }
+                  //   },
+                  // )
                 ],
               );
             }
             return Container(child: Text('sdafa'));
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final reslt = await showDialog(
+              context: context,
+              builder: (context) => Dialog(
+                    child: CreteTask(),
+                  ));
+          if (reslt != null) {
+            BlocProvider.of<TodoBloc>(context).add(AddTodoEvent(reslt));
+          }
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -73,19 +87,30 @@ class _CreteTaskState extends State<CreteTask> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text('crete new task'),
-        TextFormField(
-          controller: _cretetaskController,
-        ),
-        ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop(_cretetaskController.text);
-            },
-            child: Text('save'))
-      ],
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Crete new task\n', style: TextStyle(fontSize: 22),),
+          TextFormField(
+            controller: _cretetaskController,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1, color: Colors.cyan))),
+          ),
+          SizedBox(height: 20,),
+          ElevatedButton(
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.grey, width: 1),
+                      borderRadius: BorderRadius.all(Radius.circular(4.0))))),
+              onPressed: () {
+                Navigator.of(context).pop(_cretetaskController.text);
+              },
+              child: Text('Save todo', style: TextStyle(height: 3),))
+        ],
+      ),
     );
   }
 }

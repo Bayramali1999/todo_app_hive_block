@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('login page'),
+          title: const Text('Login page'),
         ),
         body: BlocProvider(
             create: (BuildContext context) => HomeBloc(
@@ -35,45 +35,90 @@ class HomePage extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                            title: Text('error'),
+                            title: const Text('error'),
                             content: Text(state.error!),
                           ));
                 }
               }
             }, builder: (context, state) {
               return (state is HomeInitial)
-                  ? Column(
-                      children: [
-                        TextFormField(
-                          controller: loginController,
-                          decoration: InputDecoration(hintText: 'username'),
-                        ),
-                        TextFormField(
-                          controller: passwordController,
-                          obscureText: true,
-                          decoration: InputDecoration(hintText: 'password'),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ElevatedButton(
-                                onPressed: () =>
-                                    BlocProvider.of<HomeBloc>(context).add(
-                                        LoginEvent(loginController.text,
-                                            passwordController.text)),
-                                child: Text('Login')),
-                            ElevatedButton(
-                                onPressed: () =>
-                                    BlocProvider.of<HomeBloc>(context).add(
-                                        RegisterAccountEvent(
-                                            loginController.text,
-                                            passwordController.text)),
-                                child: Text('register'))
-                          ],
-                        )
-                      ],
+                  ? Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextFormField(
+                            controller: loginController,
+                            decoration: const InputDecoration(
+                                hintText: 'username',
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.cyan, width: 1))),
+                            validator: (input) => input!.trim().isEmpty
+                                ? 'pleas enter username'
+                                : null,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: passwordController,
+                            obscureText: true,
+                            decoration: const InputDecoration(
+                                hintText: 'password',
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.cyan, width: 1))),
+                            validator: (input) => input!.trim().isEmpty
+                                ? 'pleas enter password'
+                                : null,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                  style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                          const RoundedRectangleBorder(
+                                              side: BorderSide(
+                                                  width: 1, color: Colors.grey),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(4.0))))),
+                                  onPressed: () =>
+                                      BlocProvider.of<HomeBloc>(context).add(
+                                          LoginEvent(loginController.text,
+                                              passwordController.text)),
+                                  child: const Text(
+                                    'Login',
+                                    style: TextStyle(fontSize: 18, height: 2),
+                                  )),
+                              ElevatedButton(
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        const RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                width: 1, color: Colors.grey),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(4.0)))),
+                                  ),
+                                  onPressed: () =>
+                                      BlocProvider.of<HomeBloc>(context).add(
+                                          RegisterAccountEvent(
+                                              loginController.text,
+                                              passwordController.text)),
+                                  child: const Text('Register',
+                                      style:
+                                          TextStyle(fontSize: 18, height: 2)))
+                            ],
+                          )
+                        ],
+                      ),
                     )
-                  : Center(
+                  : const Center(
                       child: CircularProgressIndicator(),
                     );
             })));
