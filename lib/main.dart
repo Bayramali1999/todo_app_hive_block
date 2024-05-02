@@ -18,14 +18,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider(create: (context) => AuthenticationService()),
-          RepositoryProvider(create: (context) => TodoService()),
-        ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          home: HomePage()
-          ,
-        ));
+      providers: [
+        RepositoryProvider(create: (context) => AuthenticationService()),
+        RepositoryProvider(create: (context) => TodoService()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        home: HomePage(),
+      ),
+    );
   }
 }
