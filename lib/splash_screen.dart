@@ -11,17 +11,21 @@ class Splash extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<HomeBloc, HomeState>(
-        listener: (context, state) {
-          if (state is SuccessfullLogonState) {
-            print('rout todo');
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => TodosPage(username: state.username)));
-          }
-          if (state is HomeInitial) {
-            print('rout home');
-            Navigator.of(context)
-                .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
-          }
+        listener: (context, state) async {
+          await Future.delayed(const Duration(milliseconds: 400))
+              .whenComplete(() {
+            if (state is SuccessfullLogonState) {
+              print('rout todo');
+
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => TodosPage(username: state.username)));
+            }
+            if (state is HomeInitial) {
+              print('rout home');
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => HomePage()));
+            }
+          });
         },
         builder: (context, state) {
           context.read<HomeBloc>().add(InitialEvent());
