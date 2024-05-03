@@ -30,7 +30,7 @@ class AuthenticationService {
     if (!user.login) {
       return null;
     } else {
-      print('login ${user.username}' );
+      print('login ${user.username}');
       return user.username;
     }
   }

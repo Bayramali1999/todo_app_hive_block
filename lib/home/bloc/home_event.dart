@@ -38,6 +38,7 @@ class InitialEvent extends HomeEvent {
   List<Object?> get props => [];
 }
 
+
 class LogoutEvent extends HomeEvent{
 final  String username;
 

@@ -4,9 +4,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:todo_app_hive_block/home/bloc/home_bloc.dart';
 import 'package:todo_app_hive_block/service/authentification.dart';
 import 'package:todo_app_hive_block/service/todo.dart';
-import 'package:todo_app_hive_block/todos/todos.dart';
-
-import 'home/home.dart';
+import 'package:todo_app_hive_block/splash_screen.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -21,27 +19,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider(create: (context) => AuthenticationService()),
-          RepositoryProvider(create: (context) => TodoService()),
-        ],
-        child: MaterialApp(
-          home: BlocProvider(
-            create: (BuildContext context) => HomeBloc(
-                RepositoryProvider.of<AuthenticationService>(context),
-                RepositoryProvider.of<TodoService>(context))
-              ..add(InitialEvent()),
-            child: BlocConsumer<HomeBloc, HomeState>(
-              listenWhen: (p, c) => p != c,
-              listener: (context, state) {},
-              builder: (context, state) {
-                print('state:${state is SuccessfullLogonState}');
-                return (state is SuccessfullLogonState)
-                    ? TodosPage(username: state.username)
-                    : HomePage();
-              },
-            ),
-          ),
-        ));
+      providers: [
+        RepositoryProvider(create: (context) => AuthenticationService()),
+        RepositoryProvider(create: (context) => TodoService()),
+      ],
+      child: BlocProvider(
+        create: (BuildContext context) => HomeBloc(
+            RepositoryProvider.of<AuthenticationService>(context),
+            RepositoryProvider.of<TodoService>(context))
+          ..add(InitialEvent()),
+        child: const MaterialApp(
+          home: Splash(),
+        ),
+      ),
+    );
   }
 }

@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
         child: BlocConsumer<HomeBloc, HomeState>(
           listener: (context, state) {
             if (state is SuccessfullLogonState) {
-              Navigator.of(context).push(MaterialPageRoute(
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => TodosPage(username: state.username)));
             }
             if (state is HomeInitial) {
@@ -102,9 +102,6 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             );
-            // : const Center(
-            //     child: CircularProgressIndicator(),
-            //   );
           },
         ),
       ),

@@ -14,8 +14,7 @@ class TodosPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (BuildContext context) =>
-            TodoBloc(RepositoryProvider.of<TodoService>(context))
+        create: (BuildContext context) => TodoBloc(RepositoryProvider.of<TodoService>(context))
               ..add(TodoLoadedEvent(username)),
         child: BlocBuilder<TodoBloc, TodoState>(
           builder: (BuildContext context, TodoState state) {
@@ -62,8 +61,9 @@ class TodosPage extends StatelessWidget {
         listener: (context, state) {
           if (state is LogoutState) {
             if (state.success) {
+              print('open page');
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => HomePage()));
+                  .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
             } else {
               print('error');
             }
@@ -71,7 +71,6 @@ class TodosPage extends StatelessWidget {
         },
         child: FloatingActionButton(
           onPressed: () async {
-            // BlocProvider.of<HomeBloc>(context).add(LogoutEvent(username));
             context.read<HomeBloc>().add(LogoutEvent(username));
           },
           child: Icon(Icons.logout_outlined),

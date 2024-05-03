@@ -12,7 +12,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final TodoService _todo;
 
   HomeBloc(this._auth, this._todo) : super(HomeInitial()) {
-
     on<LogoutEvent>((event, emit) async {
       final success = await _auth.logout(event.username);
       if (success == UserCreationRules.success) {
@@ -26,12 +25,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       await _auth.init();
       await _todo.init();
 
-      // emit(HomeInitial());
-
       final user = await _auth.initialScreenDetector();
       if (user != null) {
         emit(SuccessfullLogonState(user));
-        // emit(HomeInitial());
+      } else {
+        emit(HomeInitial());
       }
     });
 
@@ -61,10 +59,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }
     });
     on<RegistrationServiceEvent>((event, emit) async {
-      await _auth.init();
-      await _todo.init();
 
-      emit(HomeInitial());
+      // emit(HomeInitial());
     });
   }
 }
