@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:todo_app_hive_block/bloc_status.dart';
 import 'package:todo_app_hive_block/service/todo.dart';
 
 import '../../service/authentification.dart';
@@ -11,13 +12,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final AuthenticationService _auth;
   final TodoService _todo;
 
-  HomeBloc(this._auth, this._todo) : super(HomeInitial()) {
+  HomeBloc(this._auth, this._todo) : super(HomeState.initial()) {
     on<LogoutEvent>((event, emit) async {
       final success = await _auth.logout(event.username);
       if (success == UserCreationRules.success) {
-        emit(LogoutState(true));
+        emit(const HomeState(
+            success: true,
+            error: null,
+            username: null,
+            status: BlocStatus.success));
       } else {
-        emit(LogoutState(false));
+        emit(const HomeState(
+            success: false,
+            error: null,
+            username: null,
+            status: BlocStatus.fail));
       }
     });
 
@@ -27,9 +36,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       final user = await _auth.initialScreenDetector();
       if (user != null) {
-        emit(SuccessfullLogonState(user));
+        emit(HomeState(
+            username: user,
+            error: null,
+            success: null,
+            status: BlocStatus.success));
       } else {
-        emit(HomeInitial());
+        emit(HomeState.initial());
       }
     });
 
@@ -38,8 +51,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           await _auth.authenticationUser(event.username, event.password);
 
       if (user != null) {
-        emit(SuccessfullLogonState(user));
-        emit(HomeInitial());
+        emit(HomeState(
+            username: user,
+            error: null,
+            success: null,
+            status: BlocStatus.success));
+        emit(HomeState.initial());
       }
     });
 
@@ -47,19 +64,30 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final result = await _auth.createUser(event.username, event.password);
       switch (result) {
         case UserCreationRules.success:
-          emit(SuccessfullLogonState(event.username));
+          emit(HomeState(
+              username: event.username,
+              error: null,
+              success: null,
+              status: BlocStatus.success));
           break;
         case UserCreationRules.failed:
-          emit(HomeInitial(error: 'There some problaem to creating account'));
+          emit(const HomeState(
+              error: 'There some problaem to creating account',
+              status: BlocStatus.fail,
+              username: null,
+              success: null));
           break;
         case UserCreationRules.already_exists:
-          emit(HomeInitial(error: 'User already exist'));
+          emit(const HomeState(
+              error: 'User already exist',
+              status: BlocStatus.fail,
+              username: null,
+              success: null));
 
           break;
       }
     });
     on<RegistrationServiceEvent>((event, emit) async {
-
       // emit(HomeInitial());
     });
   }

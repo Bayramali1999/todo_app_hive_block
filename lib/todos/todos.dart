@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app_hive_block/bloc_status.dart';
 import 'package:todo_app_hive_block/home/bloc/home_bloc.dart';
 import 'package:todo_app_hive_block/home/home.dart';
 import 'package:todo_app_hive_block/service/todo.dart';
@@ -14,14 +15,15 @@ class TodosPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (BuildContext context) => TodoBloc(RepositoryProvider.of<TodoService>(context))
+        create: (BuildContext context) =>
+            TodoBloc(RepositoryProvider.of<TodoService>(context))
               ..add(TodoLoadedEvent(username)),
         child: BlocBuilder<TodoBloc, TodoState>(
           builder: (BuildContext context, TodoState state) {
-            if (state is TodoLoadedState) {
+            if (state.status == BlocStatus.success) {
               return ListView(
                 children: [
-                  ...state.task.map(
+                  ...state.tasks!.map(
                     (e) => ListTile(
                       style: ListTileStyle.list,
                       title: Text(e.task),
@@ -59,11 +61,11 @@ class TodosPage extends StatelessWidget {
       floatingActionButton: BlocListener<HomeBloc, HomeState>(
         listenWhen: (p, c) => p != c,
         listener: (context, state) {
-          if (state is LogoutState) {
-            if (state.success) {
+          if (state.status ==BlocStatus.success) {
+            if (state.success!) {
               print('open page');
-              Navigator.of(context)
-                  .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => HomePage()));
             } else {
               print('error');
             }

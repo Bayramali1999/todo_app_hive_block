@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app_hive_block/bloc_status.dart';
 import 'package:todo_app_hive_block/home/bloc/home_bloc.dart';
 import 'package:todo_app_hive_block/todos/todos.dart';
 
@@ -16,11 +17,11 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: BlocConsumer<HomeBloc, HomeState>(
           listener: (context, state) {
-            if (state is SuccessfullLogonState) {
+            if (state.status == BlocStatus.success) {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => TodosPage(username: state.username)));
+                  builder: (context) => TodosPage(username: state.username!)));
             }
-            if (state is HomeInitial) {
+            if (state.status == BlocStatus.fail) {
               if (state.error != null) {
                 showDialog(
                     context: context,

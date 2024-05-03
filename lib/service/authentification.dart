@@ -45,7 +45,7 @@ class AuthenticationService {
     if (success.username == '' && password == '') {
       return null;
     } else {
-      int key = success.key;
+      int key = success.key as int;
       await _users.put(key, User(username, password, true));
       return username;
     }
