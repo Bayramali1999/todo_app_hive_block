@@ -32,13 +32,19 @@ class RegisterAccountEvent extends HomeEvent {
   List<Object?> get props => [username, password];
 }
 
-//
-// class UserLoginedEvent extends HomeEvent{
-//
-//
-//   UserLoginedEvent();
-//   @override
-//   // TODO: implement props
-//   List<Object?> get props =>[];
-//
-// }
+class InitialEvent extends HomeEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class LogoutEvent extends HomeEvent{
+final  String username;
+
+  LogoutEvent(this.username);
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [username];
+
+}

@@ -12,6 +12,29 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final TodoService _todo;
 
   HomeBloc(this._auth, this._todo) : super(HomeInitial()) {
+
+    on<LogoutEvent>((event, emit) async {
+      final success = await _auth.logout(event.username);
+      if (success == UserCreationRules.success) {
+        emit(LogoutState(true));
+      } else {
+        emit(LogoutState(false));
+      }
+    });
+
+    on<InitialEvent>((event, emit) async {
+      await _auth.init();
+      await _todo.init();
+
+      // emit(HomeInitial());
+
+      final user = await _auth.initialScreenDetector();
+      if (user != null) {
+        emit(SuccessfullLogonState(user));
+        // emit(HomeInitial());
+      }
+    });
+
     on<LoginEvent>((event, emit) async {
       final user =
           await _auth.authenticationUser(event.username, event.password);
@@ -43,20 +66,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       emit(HomeInitial());
     });
-
-    // on<UserLoginedEvent>((event, emit) async {
-    //   final login = await _auth.checkLoginUser();
-    //
-    //   switch (login) {
-    //     case UserCreationRules.success:
-    //       emit(UserLoginedState(true));
-    //       break;
-    //     case UserCreationRules.failed:
-    //       emit(UserLoginedState(false));
-    //       break;
-    //     case UserCreationRules.already_exists:
-    //       break;
-    //   }
-    // });
   }
 }

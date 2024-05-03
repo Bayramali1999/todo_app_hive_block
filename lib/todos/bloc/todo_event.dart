@@ -24,7 +24,6 @@ class AddTodoEvent extends TodoEvent {
   List<Object?> get props => [todoText];
 }
 
-
 class ToggleTodoEvent extends TodoEvent {
   final String todoText;
 

@@ -34,13 +34,19 @@ class UserLoginState extends HomeState {
   // TODO: implement props
   List<Object?> get props => [];
 }
-//
-// class UserLoginedState extends HomeState {
-// final  bool login;
-//
-//   UserLoginedState(this.login);
-//
-//   @override
-//   // TODO: implement props
-//   List<Object?> get props => [login];
-// }
+
+class InitialState extends HomeState {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class LogoutState extends HomeState {
+  final bool success;
+
+  LogoutState(this.success);
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [success];
+}

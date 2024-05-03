@@ -9,17 +9,45 @@ class AuthenticationService {
     _users = await Hive.openBox<User>('userBox');
   }
 
+  Future<UserCreationRules> logout(final String username) async {
+    final user = _users.values.firstWhere(
+        (element) => element.username == username,
+        orElse: () => User('', '', false));
+    if (user.login) {
+      print('${user.username} logout');
+      int key = user.key;
+      await _users.put(key, User(user.username, user.password, false));
+      return UserCreationRules.success;
+    } else {
+      return UserCreationRules.failed;
+    }
+  }
+
+  Future<String?> initialScreenDetector() async {
+    final user = _users.values.firstWhere((element) => element.login,
+        orElse: () => User('', '', false));
+
+    if (!user.login) {
+      return null;
+    } else {
+      print('login ${user.username}' );
+      return user.username;
+    }
+  }
+
   Future<String?> authenticationUser(
       final String username, final String password) async {
-    final success = _users.values.any((element) =>
-        element.username == username && element.password == password);
+    final success = _users.values.firstWhere(
+        (element) =>
+            element.username == username && element.password == password,
+        orElse: () => User('', '', false));
 
-    if (success) {
-      // final user = _users.values.firstWhere((element) =>
-      // element.username == username && element.password == password);
-      return username;
-    } else {
+    if (success.username == '' && password == '') {
       return null;
+    } else {
+      int key = success.key;
+      await _users.put(key, User(username, password, true));
+      return username;
     }
   }
 
@@ -32,21 +60,12 @@ class AuthenticationService {
       return UserCreationRules.already_exists;
     }
     try {
-      await _users.add(User(username, password));
+      await _users.add(User(username, password, true));
       return UserCreationRules.success;
     } on Exception catch (e) {
       return UserCreationRules.failed;
     }
   }
-
-// Future<void> logoutUser(final String username, final String password) async {
-//   final user = _users.values.firstWhere((element) =>
-//   element.username.toLowerCase() == username.toLowerCase() &&
-//       element.password == password);
-//
-//   int index = user.key as int;
-//   _users.put(index, User(username, password, false));
-// }
 }
 
 enum UserCreationRules { success, failed, already_exists }

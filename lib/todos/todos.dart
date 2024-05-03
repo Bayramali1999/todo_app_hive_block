@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app_hive_block/home/bloc/home_bloc.dart';
+import 'package:todo_app_hive_block/home/home.dart';
 import 'package:todo_app_hive_block/service/todo.dart';
 import 'package:todo_app_hive_block/todos/bloc/todo_bloc.dart';
 
@@ -11,9 +13,6 @@ class TodosPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('todos'),
-      ),
       body: BlocProvider(
         create: (BuildContext context) =>
             TodoBloc(RepositoryProvider.of<TodoService>(context))
@@ -36,21 +35,21 @@ class TodosPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // ListTile(
-                  //   title: Text('crete new tasl'),
-                  //   trailing: Icon(Icons.edit),
-                  //   onTap: () async {
-                  //     final reslt = await showDialog(
-                  //         context: context,
-                  //         builder: (context) => Dialog(
-                  //               child: CreteTask(),
-                  //             ));
-                  //     if (reslt != null) {
-                  //       BlocProvider.of<TodoBloc>(context)
-                  //           .add(AddTodoEvent(reslt));
-                  //     }
-                  //   },
-                  // )
+                  ListTile(
+                    title: Text('crete new task'),
+                    trailing: Icon(Icons.edit),
+                    onTap: () async {
+                      final reslt = await showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                                child: CreteTask(),
+                              ));
+                      if (reslt != null) {
+                        BlocProvider.of<TodoBloc>(context)
+                            .add(AddTodoEvent(reslt));
+                      }
+                    },
+                  )
                 ],
               );
             }
@@ -58,18 +57,25 @@ class TodosPage extends StatelessWidget {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final reslt = await showDialog(
-              context: context,
-              builder: (context) => Dialog(
-                    child: CreteTask(),
-                  ));
-          if (reslt != null) {
-            BlocProvider.of<TodoBloc>(context).add(AddTodoEvent(reslt));
+      floatingActionButton: BlocListener<HomeBloc, HomeState>(
+        listenWhen: (p, c) => p != c,
+        listener: (context, state) {
+          if (state is LogoutState) {
+            if (state.success) {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => HomePage()));
+            } else {
+              print('error');
+            }
           }
         },
-        child: Icon(Icons.add),
+        child: FloatingActionButton(
+          onPressed: () async {
+            // BlocProvider.of<HomeBloc>(context).add(LogoutEvent(username));
+            context.read<HomeBloc>().add(LogoutEvent(username));
+          },
+          child: Icon(Icons.logout_outlined),
+        ),
       ),
     );
   }
