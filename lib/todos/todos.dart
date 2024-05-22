@@ -61,9 +61,8 @@ class TodosPage extends StatelessWidget {
       floatingActionButton: BlocListener<HomeBloc, HomeState>(
         listenWhen: (p, c) => p != c,
         listener: (context, state) {
-          if (state.status ==BlocStatus.success) {
+          if (state.status == BlocStatus.success) {
             if (state.success!) {
-              print('open page');
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => HomePage()));
             } else {
@@ -75,7 +74,7 @@ class TodosPage extends StatelessWidget {
           onPressed: () async {
             context.read<HomeBloc>().add(LogoutEvent(username));
           },
-          child: Icon(Icons.logout_outlined),
+          child:  Icon(Icons.logout_outlined),
         ),
       ),
     );
